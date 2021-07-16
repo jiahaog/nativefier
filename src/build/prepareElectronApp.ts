@@ -158,7 +158,7 @@ function changeAppPackageJsonName(
   appPath: string,
   name: string,
   url: string,
-): void {
+): string {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = parseJson<PackageJSON>(
     fs.readFileSync(packageJsonPath).toString(),
@@ -171,6 +171,8 @@ function changeAppPackageJsonName(
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+  return normalizedAppName;
 }
 
 /**
@@ -212,9 +214,10 @@ export async function prepareElectronApp(
   } catch (err: unknown) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(
+  const normalizedAppName = changeAppPackageJsonName(
     dest,
     options.packager.name as string,
     options.packager.targetUrl,
   );
+  options.packager.appBundleId = `com.electron.nativefier.${normalizedAppName}`;
 }
