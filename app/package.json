@@ -20,6 +20,6 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "electron": "^12.0.15"
+    "electron": "^13.1.7"
   }
 }
